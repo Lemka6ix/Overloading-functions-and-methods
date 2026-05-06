@@ -1,39 +1,81 @@
+/**
+ * @file main.cpp
+ * @brief Программа для операций с 3D векторами
+ * @details Эта программа предоставляет комплексную реализацию операций с 3D векторами,
+ * включая арифметические операции, сравнения и различные вспомогательные функции.
+ */
 #include <iostream>
 #include <cmath>
 #include <vector>
 
 
+/**
+ * @class Vector3D
+ * @brief Представляет 3-мерный вектор с координатами x, y, z
+ * 
+ * Этот класс предоставляет различные операции для 3D векторов, включая арифметические операции,
+ * сравнения, вычисление длины и статистический отсчет созданных векторов.
+ */
 class Vector3D {
     private:
-        double x;
-        double y;
-        double z;
-        static int cnt;
+        double x;    ///< Координата X вектора
+        double y;    ///< Координата Y вектора
+        double z;    ///< Координата Z вектора
+        static int cnt;   ///< Статический счетчик для отслеживания общего количества экземпляров Vector3D
 
     public:
+
+        /**
+         * @brief Конструктор, создающий вектор из координат
+         * @param x_p Значение координаты X
+         * @param y_p Значение координаты Y
+         * @param z_p Значение координаты Z
+         */
         Vector3D(double x_p, double y_p, double z_p) : x(x_p), y(y_p), z(z_p) {
             cnt++;
             std::cout << "The vector has been created. Total: " << cnt << std::endl;
         }
 
+        /**
+         * @brief Конструктор, создающий вектор из двух точек
+         * @param x1_p Координата X первой точки
+         * @param y1_p Координата Y первой точки
+         * @param z1_p Координата Z первой точки
+         * @param x2_p Координата X второй точки
+         * @param y2_p Координата Y второй точки
+         * @param z2_p Координата Z второй точки
+         * 
+         * Создает вектор, направленный из (x1,y1,z1) в (x2,y2,z2)
+         */
         Vector3D(double x1_p, double y1_p, double z1_p, double x2_p, double y2_p, double z2_p) 
         : x(x2_p - x1_p), y(y2_p - y1_p), z(z2_p - z1_p) {
         cnt++;
         std::cout << "The vector has been created. Total:" << cnt << std::endl;
         }
 
-
+        /**
+         * @brief Конструктор по умолчанию - создает нулевой вектор
+         */
         Vector3D() : x(0), y(0), z(0) {
             cnt++;
             std::cout << "The vector has been created. Total: " << cnt << std::endl;
         }
 
-
+        /**
+         * @brief Конструктор копирования
+         * @param other Вектор для копирования
+         */
         Vector3D(const Vector3D& other) : x(other.x), y(other.y), z(other.z) {
             cnt++;
             std::cout << "The vector has been created. Total: " << cnt << std::endl;
         }
 
+
+        /**
+         * @brief Оператор присваивания
+         * @param other Вектор для присваивания
+         * @return Ссылка на этот вектор
+         */
         Vector3D& operator=(const Vector3D& other) {
             if (this != &other) {
                 x = other.x;
@@ -43,26 +85,46 @@ class Vector3D {
             return *this;
         }
 
-
+        /**
+         * @brief Деструктор - уменьшает счетчик экземпляров
+         */
         ~Vector3D() {
             cnt--;
             std::cout << "The vector has been deleted. Left: " << cnt << std::endl;
         }
 
-
+        /**
+         * @brief Выводит координаты вектора в стандартный вывод
+         */
         void print() const {
             std::cout << "x: " << x << " y: " << y << " z: " << z;
         }
 
 
+        /**
+         * @brief Вычисляет длину (величину) вектора
+         * @return Длина вектора как double
+         */
         double vector_length() const {
         return sqrt(x*x + y*y + z*z);
         }
 
+
+        /**
+         * @brief Получает общее количество созданных экземпляров Vector3D
+         * @return Общее количество векторов, созданных с начала программы
+         */
         static int getCount() {
         return cnt;
         }
 
+
+        // Унарные операторы
+
+        /**
+         * @brief Префиксный оператор инкремента - увеличивает длину вектора на 1%
+         * @return Ссылка на этот вектор после инкремента
+         */
         Vector3D& operator++() {
         double percent = 1.01;
         x *= percent;
@@ -71,6 +133,11 @@ class Vector3D {
         return *this;
         }
 
+
+        /**
+         * @brief Постфиксный оператор инкремента - увеличивает длину вектора на 1%
+         * @return Копия вектора до инкремента
+         */
         Vector3D operator++(int) {
         Vector3D temp = *this;
         double percent = 1.01;
@@ -80,6 +147,11 @@ class Vector3D {
         return temp;
         }
 
+
+        /**
+         * @brief Префиксный оператор декремента - уменьшает длину вектора на 1%
+         * @return Ссылка на этот вектор после декремента
+         */
         Vector3D& operator--() {
         double percent = 1.01;
         x /= percent;
@@ -88,6 +160,10 @@ class Vector3D {
         return *this;
         }
 
+        /**
+         * @brief Постфиксный оператор декремента - уменьшает длину вектора на 1%
+         * @return Копия вектора до декремента
+         */
         Vector3D operator--(int) {
         Vector3D temp = *this;
         double percent = 1.01;
@@ -97,6 +173,14 @@ class Vector3D {
         return temp;
         }
 
+
+        // Составные операторы присваивания
+
+        /**
+         * @brief Составной оператор присваивания сложения
+         * @param other Вектор для сложения
+         * @return Ссылка на этот вектор после сложения
+         */
         Vector3D& operator+=(const Vector3D& other) {
         x += other.x;
         y += other.y;
@@ -104,6 +188,11 @@ class Vector3D {
         return *this;
         }
 
+        /**
+         * @brief Составной оператор присваивания вычитания
+         * @param other Вектор для вычитания
+         * @return Ссылка на этот вектор после вычитания
+         */
         Vector3D& operator-=(const Vector3D& other) {
         x -= other.x;
         y -= other.y;
@@ -111,6 +200,12 @@ class Vector3D {
         return *this;
         }
 
+        /**
+         * @brief Составной оператор присваивания умножения (скалярное произведение)
+         * @param other Вектор для умножения
+         * @return Ссылка на этот вектор после умножения
+         * @note Это преобразует вектор в скалярный результат во всех компонентах
+         */
         Vector3D& operator*=(const Vector3D& other) {
         double result = x * other.x + y * other.y + z * other.z;
         x = result;
@@ -119,49 +214,109 @@ class Vector3D {
         return *this;
         }
 
+
+        // Бинарные арифметические операторы
+
+        /**
+         * @brief Оператор сложения для двух векторов
+         * @param lhs Вектор слева от оператора
+         * @param rhs Вектор справа от оператора
+         * @return Новый вектор - результат сложения
+         */
         friend Vector3D operator+(Vector3D lhs, const Vector3D& rhs) {
         lhs += rhs;
         return lhs;
         }
 
+        /**
+         * @brief Оператор вычитания для двух векторов
+         * @param lhs Вектор слева от оператора
+         * @param rhs Вектор справа от оператора
+         * @return Новый вектор - результат вычитания
+         */
         friend Vector3D operator-(Vector3D lhs, const Vector3D& rhs) {
         lhs -= rhs;
         return lhs;
         }
 
+        /**
+         * @brief Оператор умножения для двух векторов (скалярное произведение)
+         * @param lhs Вектор слева от оператора
+         * @param rhs Вектор справа от оператора
+         * @return Новый вектор с результатом скалярного произведения во всех компонентах
+         */
         friend Vector3D operator*(Vector3D lhs, const Vector3D& rhs) {
         lhs *= rhs;
         return lhs;
         }
 
+
+        // Операторы сравнения (сравнивают длины векторов)
+
+        /**
+         * @brief Оператор меньше - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длина этого вектора меньше длины другого
+         */
         bool operator<(const Vector3D& other) const {
         return this->vector_length() < other.vector_length();
         }
 
+        /**
+         * @brief Оператор больше - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длина этого вектора больше длины другого
+         */
         bool operator>(const Vector3D& other) const {
         return this->vector_length() > other.vector_length();
         }
 
+        /**
+         * @brief Оператор меньше или равно - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длина этого вектора меньше или равна длине другого
+         */
         bool operator<=(const Vector3D& other) const {
         return this->vector_length() <= other.vector_length();
         }
 
+        /**
+         * @brief Оператор больше или равно - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длина этого вектора больше или равна длине другого
+         */
         bool operator>=(const Vector3D& other) const {
         return this->vector_length() >= other.vector_length();
         }
 
+        /**
+         * @brief Оператор равенства - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длины векторов равны
+         */
         bool operator==(const Vector3D& other) const {
         return this->vector_length() == other.vector_length();
         }
 
+        /**
+         * @brief Оператор неравенства - сравнивает длины векторов
+         * @param other Вектор для сравнения
+         * @return True если длины векторов не равны
+         */
          bool operator!=(const Vector3D& other) const {
         return this->vector_length() != other.vector_length();
         }
 };
 
-
+// Инициализация статической переменной-члена
 int Vector3D::cnt = 0;
 
+
+/**
+ * @brief Отображает главное меню и получает выбор пользователя
+ * @param choice Предыдущий выбор (не используется)
+ * @return Выбор пользователя из меню
+ */
 int menu(int choice) {
     std::cout << "\n1. Create vector\n"
               << "2. Show all vectors\n"
@@ -179,6 +334,13 @@ int menu(int choice) {
 }
 
 
+/**
+ * @brief Создает новый вектор на основе ввода пользователя
+ * @return Новосозданный объект Vector3D
+ * 
+ * Позволяет пользователю выбрать между созданием вектора по координатам
+ * или по двум точкам в пространстве.
+ */
 Vector3D createVector() {
     int method;
     std::cout << "Choose creation method:\n";
@@ -208,6 +370,11 @@ Vector3D createVector() {
 }
 
 
+
+/**
+ * @brief Отображает все векторы в коллекции
+ * @param vectors Вектор объектов Vector3D для отображения
+ */
 void showVectors(const std::vector<Vector3D>& vectors) {
     if (vectors.empty()) {
         std::cout << "No vectors!" << std::endl;
@@ -222,6 +389,14 @@ void showVectors(const std::vector<Vector3D>& vectors) {
     }
 }
 
+
+/**
+ * @brief Главная функция - точка входа в программу
+ * @return Статус выхода (0 для успеха)
+ * 
+ * Предоставляет интерактивный интерфейс командной строки для операций с 3D векторами.
+ * Пользователи могут создавать векторы, выполнять операции и просматривать результаты.
+ */
 int main() {
     std::vector<Vector3D> vectors;
     int choice;
